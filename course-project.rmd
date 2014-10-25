@@ -27,6 +27,8 @@ answers <- predict(modFit,testing)
 
 I remove variables that the creators of the data set have added as derived values, e.g. variables relating to standard deviation, skewness, kurtosis, average, etc. Only the original measurment values remain. 
 
+In short, I chose the variables I did because I wanted to remove superfluous and confounding values, and I chose the model it can work with large amounts of data and attain a high degree of accuracy.
+
 ## Expected out of sample error and cross-validation
 The out-of-bag (OOB) estimate error rate is 0.28% using this algorithm. This represents the set of bootstrap datasets, created during the random forest process, missing a given value from the original dataset. OOB provides a **reasonable estimate of out of sample error**. Thus I expect the out of sample error rate to be around 0.28%.  Random forests uses a bootstrapping approach, in which each tree derives from a different bootstrap. "About one-third of the cases are left out of the bootstrap sample and not used in the construction of the kth tree" (see Brieman and Cutler, https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm). Bootstrapping is a **valid cross-validation method** and is built into the random forest appproach. Below is the OOB estimate of the error rate and the confusion matrix.
 
