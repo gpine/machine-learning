@@ -57,7 +57,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div id="summary" class="section level2">
 <h2>Summary</h2>
-<p>I have <strong>built a machine learning algorithm to predict activity quality from activity monitors</strong>. The algorithm uses the default settings from the random forest technique and correctly predicted all 20 values from the assignment’s testing set. The algorithm is short enough that I will just paste it below. After loading in the training and testing sets from online and setting up the relevant libraries, it does the following (:</p>
+<p>I have <strong>built a machine learning algorithm to predict activity quality from activity monitors</strong>. The algorithm uses the default settings from the random forest technique and correctly predicted all 20 values from the assignment’s testing set. The algorithm is short enough that I will just paste it below. After loading in the training and testing sets from online and setting up the relevant libraries, it does the following:</p>
 <pre class="r"><code># Remove variables that begin with the following prefixes
 training &lt;- training[,-grep(&quot;^(total|ampl|skew|kurt|cvtd_|new_|num_|var_|avg_|max_|min_|stddev_|raw_|user_|X)&quot;, names(training))]
 
@@ -75,6 +75,7 @@ modFit &lt;- randomForest(classe ~ ., data=training)
 # Predict the answers using the predict function
 answers &lt;- predict(modFit,testing)</code></pre>
 <p>I remove variables that the creators of the data set have added as derived values, e.g. variables relating to standard deviation, skewness, kurtosis, average, etc. Only the original measurment values remain.</p>
+<p>In short, I chose the variables I did because I wanted to remove superfluous and confounding values, and I chose the model it can work with large amounts of data and attain a high degree of accuracy.</p>
 </div>
 <div id="expected-out-of-sample-error-and-cross-validation" class="section level2">
 <h2>Expected out of sample error and cross-validation</h2>
