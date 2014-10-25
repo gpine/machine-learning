@@ -1,0 +1,51 @@
+---
+title: "Machine Learning Course Project"
+output: html_document
+---
+
+## Summary
+I have **built a machine learning algorithm to predict activity quality from activity monitors**. The algorithm uses the default settings from the random forest technique and correctly predicted all 20 values from the assignment's testing set. The algorithm is short enough that I will just paste it below. After loading in the training and testing sets from online and setting up the relevant libraries, it does the following (:
+
+```{r, eval=FALSE}
+# Remove variables that begin with the following prefixes
+training <- training[,-grep("^(total|ampl|skew|kurt|cvtd_|new_|num_|var_|avg_|max_|min_|stddev_|raw_|user_|X)", names(training))]
+
+# Change the variables to numeric (except for "classe")
+for (i in 1:(length(training)-1)) {
+  training[,i] <- as.numeric(training[,i])
+}
+training$classe <- as.factor(training$classe)
+
+set.seed(5233)  # for reproducibility 
+
+# Run randomForest() with default settings.
+modFit <- randomForest(classe ~ ., data=training)
+
+# Predict the answers using the predict function
+answers <- predict(modFit,testing)
+```
+
+I remove variables that the creators of the data set have added as derived values, e.g. variables relating to standard deviation, skewness, kurtosis, average, etc. Only the original measurment values remain. 
+
+## Expected out of sample error and cross-validation
+The out-of-bag (OOB) estimate error rate is 0.28% using this algorithm. This represents the set of bootstrap datasets, created during the random forest process, missing a given value from the original dataset. OOB provides a **reasonable estimate of out of sample error**. Thus I expect the out of sample error rate to be around 0.28%.  Random forests uses a bootstrapping approach, in which each tree derives from a different bootstrap. "About one-third of the cases are left out of the bootstrap sample and not used in the construction of the kth tree" (see Brieman and Cutler, https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm). Bootstrapping is a **valid cross-validation method** and is built into the random forest appproach. Below is the OOB estimate of the error rate and the confusion matrix.
+
+```{r, echo=FALSE}
+library(caret); library(ggplot2); library(randomForest)
+training <- read.csv("pml-training.csv", colClasses = "character")
+testing <- read.csv("pml-testing.csv", colClasses = "character")
+# Remove variables that begin with the following prefixes
+training <- training[,-grep("^(total|ampl|skew|kurt|cvtd_|new_|num_|var_|avg_|max_|min_|stddev_|raw_|user_|X)", names(training))]
+
+# Change the variables to numeric (except for "classe")
+for (i in 1:(length(training)-1)) {
+  training[,i] <- as.numeric(training[,i])
+}
+training$classe <- as.factor(training$classe)
+
+set.seed(5233)  # for reproducibility 
+
+# Run randomForest() with default settings.
+modFit <- randomForest(classe ~ ., data=training)
+modFit
+```
