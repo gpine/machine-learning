@@ -4,7 +4,7 @@ output: html_document
 ---
 
 ## Summary
-I have **built a machine learning algorithm to predict activity quality from activity monitors**. The algorithm uses the default settings from the random forest technique and correctly predicted all 20 values from the assignment's testing set. The algorithm is short enough that I will just paste it below. After loading in the training and testing sets from online and setting up the relevant libraries, it does the following (:
+I have **built a machine learning algorithm to predict activity quality from activity monitors**. The algorithm uses the default settings from the random forest technique and correctly predicted all 20 values from the assignment's testing set. The algorithm is short enough that I will just paste it below. After loading in the training and testing sets from online and setting up the relevant libraries, it does the following:
 
 ```{r, eval=FALSE}
 # Remove variables that begin with the following prefixes
