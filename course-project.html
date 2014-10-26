@@ -60,7 +60,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <p>I have <strong>built a machine learning algorithm to predict activity quality from activity monitors</strong>. The algorithm uses the default settings from the random forest technique and correctly predicted all 20 values from the assignment’s testing set. The algorithm is short enough that I will just paste it below. After loading in the training and testing sets from online and setting up the relevant libraries, it does the following:</p>
 <pre class="r"><code># Remove variables that begin with the following prefixes
 training &lt;- training[,-grep(&quot;^(total|ampl|skew|kurt|cvtd_|new_|num_|var_|avg_|max_|min_|stddev_|raw_|user_|X)&quot;, names(training))]
-
+  
 # Change the variables to numeric (except for &quot;classe&quot;)
 for (i in 1:(length(training)-1)) {
   training[,i] &lt;- as.numeric(training[,i])
@@ -72,6 +72,10 @@ set.seed(5233)  # for reproducibility
 # Run randomForest() with default settings.
 modFit &lt;- randomForest(classe ~ ., data=training)
 
+# Run random forest cross-valdidation for feature selection
+rfcv1 &lt;- rfcv(training[,-49], training[,49], cv.fold=3)
+rfcv1[2]
+
 # Predict the answers using the predict function
 answers &lt;- predict(modFit,testing)</code></pre>
 <p>I remove variables that the creators of the data set have added as derived values, e.g. variables relating to standard deviation, skewness, kurtosis, average, etc. Only the original measurment values remain.</p>
@@ -79,7 +83,7 @@ answers &lt;- predict(modFit,testing)</code></pre>
 </div>
 <div id="expected-out-of-sample-error-and-cross-validation" class="section level2">
 <h2>Expected out of sample error and cross-validation</h2>
-<p>The out-of-bag (OOB) estimate error rate is 0.28% using this algorithm. This represents the set of bootstrap datasets, created during the random forest process, missing a given value from the original dataset. OOB provides a <strong>reasonable estimate of out of sample error</strong>. Thus I expect the out of sample error rate to be around 0.28%. Random forests uses a bootstrapping approach, in which each tree derives from a different bootstrap. “About one-third of the cases are left out of the bootstrap sample and not used in the construction of the kth tree” (see Brieman and Cutler, <a href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm" class="uri">https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm</a>). Bootstrapping is a <strong>valid cross-validation method</strong> and is built into the random forest appproach. Below is the OOB estimate of the error rate and the confusion matrix.</p>
+<p>The out-of-bag (OOB) estimate error rate is 0.28% using this algorithm. This represents the set of bootstrap datasets, created during the random forest process, missing a given value from the original dataset. OOB provides a <strong>reasonable estimate of out of sample error</strong>. Thus I expect the out of sample error rate to be around 0.28%. I also run a <strong>cross-validation</strong> function, rfcv. The cross-validation error for a model using 48 variables is 0.005198247. Below is the OOB estimate of the error rate, the confusion matrix, and the cross-validation error from my approach.</p>
 <pre><code>## Loading required package: lattice
 ## Loading required package: ggplot2
 ## randomForest 4.6-10
@@ -99,6 +103,9 @@ answers &lt;- predict(modFit,testing)</code></pre>
 ## C    0    9 3410    3    0 0.0035067212
 ## D    0    0   18 3196    2 0.0062189055
 ## E    0    0    1    5 3601 0.0016634322</code></pre>
+<pre><code>## $error.cv
+##          48          24          12           6           3           1 
+## 0.005198247 0.006880033 0.009173377 0.044032209 0.109927632 0.597849353</code></pre>
 </div>
 
 
